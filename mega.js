@@ -1,77 +1,64 @@
-
-//_____ _    _ _      _    __  __ ____  
- // / ____| |  | | |    / \  |  \/  |  _ \ 
- //| (___ | |  | | |   / _ \ | |\/| | | | |
- // \___ \| |  | | |  / ___ \| |  | | |_| |
- // ____) | |__| | |_/ /   \ \_|  |_|____/ 
- //|_____/ \____/|_____/     \_\          
- 
-//             S U L A - M D
-
 import * as mega from 'megajs';
 
-// Mega authentication credentials
+// Mega authentication credentials (SECURE THIS in real use!)
 const auth = {
-    email: 'nicksonkipruto79@gmail.com', // Replace with your Mega email
-    password: 'Kim2024K', // Replace with your Mega password
+    email: 'nicksonkipruto79@gmail.com',
+    password: 'Kim2024K',
     userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246'
 };
 
-// Function to upload a file to Mega and return the URL
-export const upload = (data, name) => {
-    return new Promise((resolve, reject) => {
-        try {
-            // Authenticate with Mega storage
-            const storage = new mega.Storage(auth, () => {
-                // Upload the data stream (e.g., file stream) to Mega
-                const uploadStream = storage.upload({ name: name, allowUploadBuffering: true });
+// Authenticate once to reuse the storage instance
+let storagePromise = null;
 
-                // Pipe the data into Mega
-                data.pipe(uploadStream);
+function getStorage() {
+    if (!storagePromise) {
+        storagePromise = new Promise((resolve, reject) => {
+            const storage = new mega.Storage(auth, () => resolve(storage));
+            storage.on('error', reject);
+        });
+    }
+    return storagePromise;
+}
 
-                // When the file is successfully uploaded, resolve with the file's URL
-                storage.on("add", (file) => {
-                    file.link((err, url) => {
-                        if (err) {
-                            reject(err); // Reject if there's an error getting the link
-                        } else {
-                            storage.close(); // Close the storage session once the file is uploaded
-                            resolve(url); // Return the file's link
-                        }
-                    });
-                });
+// Upload function
+export const upload = async (data, name) => {
+    try {
+        const storage = await getStorage();
 
-                // Handle errors during file upload process
-                storage.on("error", (error) => {
-                    reject(error);
+        return new Promise((resolve, reject) => {
+            const uploadStream = storage.upload({ name, allowUploadBuffering: true });
+
+            uploadStream.on('complete', (file) => {
+                file.link((err, url) => {
+                    if (err) return reject(err);
+                    resolve(url);
                 });
             });
-        } catch (err) {
-            reject(err); // Reject if any error occurs during the upload process
-        }
-    });
+
+            uploadStream.on('error', (err) => {
+                reject(err);
+            });
+
+            data.pipe(uploadStream);
+        });
+
+    } catch (err) {
+        throw new Error(`Upload failed: ${err.message}`);
+    }
 };
 
-// Function to download a file from Mega using a URL
+// Download function
 export const download = (url) => {
     return new Promise((resolve, reject) => {
         try {
-            // Get file from Mega using the URL
             const file = mega.File.fromURL(url);
 
             file.loadAttributes((err) => {
-                if (err) {
-                    reject(err);
-                    return;
-                }
+                if (err) return reject(err);
 
-                // Download the file buffer
                 file.downloadBuffer((err, buffer) => {
-                    if (err) {
-                        reject(err);
-                    } else {
-                        resolve(buffer); // Return the file buffer
-                    }
+                    if (err) return reject(err);
+                    resolve(buffer);
                 });
             });
         } catch (err) {
