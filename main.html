@@ -8,7 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <style>
     :root {
-      --primary-red: #05e6ff;
+      --primary-blue: #05e6ff;
       --primary-dark: #000000;
       --primary-light: #05e6ff;
       --accent-gold: #05e6ff;
@@ -48,23 +48,6 @@
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
-    }
-
-    .red-particle {
-      position: absolute;
-      width: 5px;
-      height: 5px;
-      background-color: var(--primary-red);
-      border-radius: 50%;
-      box-shadow: 0 0 10px 2px var(--primary-red);
-      animation: float 15s linear infinite;
-      opacity: 0.7;
-    }
-
-    @keyframes float {
-      0% { transform: translate(0, 0) scale(0.5); opacity: 0; }
-      50% { opacity: 0.8; }
-      100% { transform: translate(100vw, -100vh) scale(1.2); opacity: 0; }
     }
 
     .electric-pulse {
@@ -111,7 +94,7 @@
       height: 80px;
       border-radius: 50%;
       object-fit: cover;
-      border: 3px solid var(--primary-red);
+      border: 3px solid var(--primary-blue);
       transition: all 0.5s ease;
     }
 
@@ -121,13 +104,13 @@
     }
 
     @keyframes pulseBorder {
-      0% { box-shadow: 0 0 15px var(--primary-red); }
-      100% { box-shadow: 0 0 35px var(--primary-red), 0 0 60px var(--primary-red); }
+      0% { box-shadow: 0 0 15px var(--primary-blue); }
+      100% { box-shadow: 0 0 35px var(--primary-blue), 0 0 60px var(--primary-blue); }
     }
 
     .logo-text h1 {
       font-size: 2.2rem;
-      background: linear-gradient(to right, var(--primary-red), var(--accent-gold));
+      background: linear-gradient(to right, var(--primary-blue), var(--accent-gold));
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
@@ -147,8 +130,8 @@
       text-align: center;
       padding: 40px 20px;
       border-radius: 15px;
-      border: 2px solid var(--primary-red);
-      box-shadow: 0 0 15px var(--primary-red), inset 0 0 15px var(--primary-red);
+      border: 2px solid var(--primary-blue);
+      box-shadow: 0 0 15px var(--primary-blue), inset 0 0 15px var(--primary-blue);
       margin-bottom: 40px;
       animation: contentGlow 4s infinite alternate;
       backdrop-filter: blur(10px);
@@ -157,11 +140,11 @@
 
     @keyframes contentGlow {
       0% {
-        box-shadow: 0 0 15px var(--primary-red), inset 0 0 15px var(--primary-red);
-        border-color: var(--primary-red);
+        box-shadow: 0 0 15px var(--primary-blue), inset 0 0 15px var(--primary-blue);
+        border-color: var(--primary-blue);
       }
       100% {
-        box-shadow: 0 0 30px var(--primary-red), inset 0 0 30px var(--primary-red);
+        box-shadow: 0 0 30px var(--primary-blue), inset 0 0 30px var(--primary-blue);
         border-color: var(--accent-gold);
       }
     }
@@ -171,15 +154,15 @@
       height: auto;
       max-height: 400px;
       border-radius: 10px;
-      border: 3px solid var(--primary-red);
-      box-shadow: 0 0 20px var(--primary-red);
+      border: 3px solid var(--primary-blue);
+      box-shadow: 0 0 20px var(--primary-blue);
       margin-bottom: 30px;
       transition: all 0.5s ease;
     }
 
     .feature-image:hover {
       transform: scale(1.02);
-      box-shadow: 0 0 40px var(--primary-red);
+      box-shadow: 0 0 40px var(--primary-blue);
     }
 
     h2 {
@@ -237,8 +220,8 @@
     }
 
     .btn-download {
-      background: linear-gradient(to right, var(--primary-red), #000000);
-      border-color: var(--primary-red);
+      background: linear-gradient(to right, var(--primary-blue), #000000);
+      border-color: var(--primary-blue);
     }
 
     .btn-pair, .btn-github, .btn-heroku, .btn-contact {
@@ -283,7 +266,7 @@
   </style>
 </head>
 <body>
-  <div class="animated-bg" id="animated-bg"></div>
+  <div class="animated-bg"></div>
   <div class="electric-pulse"></div>
 
   <div class="container">
@@ -323,25 +306,6 @@
   </div>
 
   <script>
-    function createParticles(count) {
-      const container = document.getElementById('animated-bg');
-      for (let i = 0; i < count; i++) {
-        const particle = document.createElement('div');
-        particle.className = 'red-particle';
-        particle.style.left = `${Math.random() * 100}%`;
-        particle.style.top = `${Math.random() * 100}%`;
-        const size = Math.random() * 4 + 2;
-        particle.style.width = `${size}px`;
-        particle.style.height = `${size}px`;
-        const duration = Math.random() * 10 + 15;
-        particle.style.animationDuration = `${duration}s`;
-        particle.style.animationDelay = `${Math.random() * 5}s`;
-        container.appendChild(particle);
-      }
-    }
-
-    createParticles(30);
-
     const txt = "HACKLINKTECH";
     let i = 0;
     function typeWriter() {
@@ -354,4 +318,4 @@
     window.onload = typeWriter;
   </script>
 </body>
-</html>
+  </html>
